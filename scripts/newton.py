@@ -4,10 +4,20 @@ import numpy as np
 
 def s(tx, w):
     diag = sigma(tx.dot(w)) * (1-sigma(tx.dot(w)))
-    return np.diag(diag)
+    return diag
 
 def hessian(tx, s):
-    H = tx.T.dot(s).dot(tx)
+    Xt = tx.T
+    N = len(Xt)
+    M = len(s)
+    XtS = np.zeros((N, M))
+    for i in range(N):
+        for j in range(M):
+            XtS[i, j] = Xt[i,j]*s[j]
+
+    H = XtS.dot(tx)
+    #print(XtS.shape, H)
+
     return H
 
 def newton_method(y, tx, max_iters, gamma):
